@@ -62,6 +62,16 @@ export default {
             description: "Resume the current song",
             type: 1
         },
+        {
+            name: "join",
+            description: "Join the voice channel",
+            type: 1
+        },
+        {
+            name: "leave",
+            description: "Leave the voice channel",
+            type: 1
+        }
     ],
     async run(client, interaction) {
         const {options, member, guild} = interaction
@@ -132,6 +142,25 @@ export default {
                 interaction.reply({content: `Current queue:\n${songs}`, ephemeral: true})
             }
             break;
+            case "join": {
+                if (client.distube?.voices.get(guild?.id as string)) return interaction.reply({content: "I am already in a voice channel", ephemeral: true});
+
+                if (voiceChannel) {
+                    client.distube?.voices.join(voiceChannel)
+                    interaction.reply({content: "Joined the voice channel", ephemeral: true})
+                }
+            }
+            break;
+            case "leave": {
+                if (!client.distube?.voices.get(guild?.id as string)) return interaction.reply({content: "I am not in a voice channel", ephemeral: true});
+
+                if (voiceChannel) {
+                    client.distube?.voices.leave(voiceChannel)
+                    interaction.reply({content: "Left the voice channel", ephemeral: true})
+                }
+            }
+            break;
+        
         }
     }
 } as Command
