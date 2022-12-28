@@ -71,6 +71,11 @@ export default {
             name: "leave",
             description: "Leave the voice channel",
             type: 1
+        },
+        {
+            name: "shuffle",
+            description: "Shuffle the queue",
+            type: 1
         }
     ],
     async run(client, interaction) {
@@ -89,6 +94,8 @@ export default {
                     member: member as any,
                     textChannel: interaction.channel as any,
                 })
+
+                interaction.reply({content: "Playing the song", ephemeral: true})
             }
             break;
             case "loop": {
@@ -158,6 +165,13 @@ export default {
                     client.distube?.voices.leave(voiceChannel)
                     interaction.reply({content: "Left the voice channel", ephemeral: true})
                 }
+            }
+            break;
+            case "shuffle": {
+                const queue = client.distube?.getQueue(interaction)
+                if (!queue) return interaction.reply({content: "There is no song being played", ephemeral: true});
+                queue.shuffle()
+                interaction.reply({content: "Shuffled the queue", ephemeral: true})
             }
             break;
         
